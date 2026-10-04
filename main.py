@@ -135,10 +135,10 @@ def suppress_stdout():
         sys.stdout = old_stdout
 
 
-EMAIL = os.getenv("QUOTEX_EMAIL", "")
+EMAIL = os.getenv("QUOTEX_EMAIL", "tradersabbirx4@gmail.com")
 PASSWORD = os.getenv("QUOTEX_PASSWORD", "")
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "sriti123")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
