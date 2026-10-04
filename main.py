@@ -47,7 +47,10 @@ except ImportError:
 
 sys.path.insert(0, ".")
 
-from pyquotex.stable_api import Quotex
+try:
+    from pyquotex.stable_api import Quotex
+except ImportError:
+    Quotex = None
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -135,11 +138,7 @@ def suppress_stdout():
 EMAIL = os.getenv("QUOTEX_EMAIL", "")
 PASSWORD = os.getenv("QUOTEX_PASSWORD", "")
 
-if not EMAIL or not PASSWORD:
-    print("ERROR: Set QUOTEX_EMAIL and QUOTEX_PASSWORD in .env or export them")
-    sys.exit(1)
-
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -1202,6 +1201,12 @@ def analyze_pair(candles, timeframe, min_accuracy, start_time, end_time,
 async def main():
     print_banner()
 
+    if not EMAIL or not PASSWORD:
+        err("Set QUOTEX_EMAIL and QUOTEX_PASSWORD in .env or export them.")
+        return
+    if Quotex is None:
+        err("Quotex client is missing. Install dependencies from requirements.txt.")
+        return
     if not check_expiry():
         return
 

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5f1">
+  <title>Signal Desk | Quotex</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Signal Desk home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>signal<span class="brand-light">desk</span></span>
+      </a>
+      <div class="topbar-right">
+        <span class="live-tag"><span class="live-dot"></span> LOCAL SESSION</span>
+        <span class="topbar-rule"></span>
+        <span class="topbar-product">QUOTEX / M1 SIGNAL GENERATOR</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro-row" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">RESEARCH CONSOLE <span> / </span> HISTORICAL VALIDATION</p>
+          <h1 id="page-title">Signal workspace</h1>
+          <p class="intro-copy">Scan price history. Review holdout-tested patterns. Keep the decision yours.</p>
+        </div>
+        <div class="readiness" id="readiness" aria-live="polite">
+          <span class="readiness-mark"></span>
+          <span class="readiness-label">CHECKING LOCAL SETUP</span>
+        </div>
+      </section>
+
+      <div class="notice" role="note">
+        <span class="notice-icon" aria-hidden="true">i</span>
+        <p><strong>Signal tool only.</strong> Results are historical analysis, not a promise of returns. No orders are placed by this dashboard.</p>
+        <span class="notice-model">OUT-OF-SAMPLE FIRST</span>
+      </div>
+
+      <section class="workspace-grid">
+        <aside class="settings-panel" aria-labelledby="settings-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SCAN PARAMETERS</p>
+              <h2 id="settings-title">Build a scan</h2>
+            </div>
+            <span class="panel-index">01</span>
+          </div>
+          <form id="scan-form">
+            <label class="field-label" for="pairs">ASSET PAIRS</label>
+            <input id="pairs" name="pairs" type="text" value="EURUSD_otc, GBPUSD_otc" autocomplete="off" required>
+            <p class="field-hint">Comma separated · e.g. EURUSD_otc</p>
+
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="history-days">HISTORY</label>
+                <div class="input-suffix"><input id="history-days" name="history_days" type="number" min="1" max="90" step="1" value="7" required><span>days</span></div>
+              </div>
+              <div>
+                <label class="field-label" for="max-signals">SIGNAL LIMIT</label>
+                <input id="max-signals" name="max_signals" type="number" min="1" max="100" step="1" value="10" required>
+              </div>
+            </div>
+
+            <div class="field-row time-row">
+              <div>
+                <label class="field-label" for="start-time">PKT WINDOW</label>
+                <input id="start-time" name="start_time" type="time" value="00:00" required>
+              </div>
+              <div class="time-end">
+                <label class="field-label visually-hidden" for="end-time">End time PKT</label>
+                <input id="end-time" name="end_time" type="time" value="23:59" required>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="min-accuracy">MIN TRAIN ACCURACY</label>
+                <div class="input-suffix"><input id="min-accuracy" name="min_accuracy" type="number" min="1" max="100" step="1" value="75" required><span>%</span></div>
+              </div>
+              <div>
+                <label class="field-label" for="payout">PAYOUT</label>
+                <div class="input-suffix"><input id="payout" name="payout_pct" type="number" min="1" max="100" step="1" value="80" required><span>%</span></div>
+              </div>
+            </div>
+
+            <div class="split-control">
+              <div class="split-label-row">
+                <label class="field-label" for="train-split">TRAIN / TEST SPLIT</label>
+                <span class="split-value" id="split-value">70 / 30</span>
+              </div>
+              <input id="train-split" name="train_ratio" type="range" min="40" max="90" step="5" value="70">
+              <div class="range-labels"><span>40% train</span><span>90% train</span></div>
+            </div>
+
+            <div class="locked-row">
+              <span class="lock-symbol" aria-hidden="true">M1</span>
+              <span><strong>Timeframe</strong><small>1-minute candles · 15-minute buckets</small></span>
+              <span class="locked-tag">FIXED</span>
+            </div>
+
+            <button class="scan-button" id="scan-button" type="submit">
+              <span class="button-icon" aria-hidden="true">↗</span>
+              <span id="scan-button-label">Run market scan</span>
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+          </form>
+          <div class="settings-foot"><span class="foot-dot"></span> AI review disabled · analysis-only mode</div>
+        </aside>
+
+        <div class="results-column">
+          <section class="metrics-grid" aria-label="Scan summary">
+            <article class="metric metric-primary">
+              <span class="metric-label">VALIDATED SIGNALS</span>
+              <strong class="metric-value" id="metric-signals">—</strong>
+              <span class="metric-caption" id="metric-signals-caption">Awaiting first scan</span>
+              <span class="metric-index">01</span>
+            </article>
+            <article class="metric">
+              <span class="metric-label">AVG. HOLDOUT ACCURACY</span>
+              <strong class="metric-value" id="metric-accuracy">—</strong>
+              <span class="metric-caption">Test slice only</span>
+              <span class="metric-index">02</span>
+            </article>
+            <article class="metric">
+              <span class="metric-label">BREAKEVEN MARK</span>
+              <strong class="metric-value" id="metric-breakeven">—</strong>
+              <span class="metric-caption">Based on selected payout</span>
+              <span class="metric-index">03</span>
+            </article>
+          </section>
+
+          <section class="chart-panel" aria-labelledby="chart-title">
+            <div class="section-heading chart-heading">
+              <div>
+                <p class="eyebrow">TEST SLICE PERFORMANCE</p>
+                <h2 id="chart-title">Validation spread</h2>
+              </div>
+              <div class="chart-key"><span class="key-dot"></span> Signal accuracy <span class="key-line"></span> Breakeven</div>
+            </div>
+            <div class="chart-wrap" id="chart-wrap">
+              <svg id="accuracy-chart" viewBox="0 0 760 168" role="img" aria-label="Signal test accuracies compared with payout breakeven">
+                <g class="chart-grid-lines">
+                  <line x1="48" y1="20" x2="748" y2="20"></line>
+                  <line x1="48" y1="56" x2="748" y2="56"></line>
+                  <line x1="48" y1="92" x2="748" y2="92"></line>
+                  <line x1="48" y1="128" x2="748" y2="128"></line>
+                </g>
+                <g class="chart-axis-labels">
+                  <text x="4" y="24">100%</text><text x="12" y="60">75%</text>
+                  <text x="12" y="96">50%</text><text x="12" y="132">25%</text>
+                </g>
+                <g id="chart-data"></g>
+              </svg>
+              <div class="chart-empty" id="chart-empty"><span class="empty-cross">＋</span><span>Holdout results appear here after a scan</span></div>
+            </div>
+          </section>
+
+          <section class="signals-panel" aria-labelledby="signals-title">
+            <div class="section-heading signal-heading">
+              <div>
+                <p class="eyebrow">GENERATED FROM M1 HISTORY</p>
+                <h2 id="signals-title">Signal list <span class="result-count" id="result-count">0</span></h2>
+              </div>
+              <div class="table-tools">
+                <label class="visually-hidden" for="direction-filter">Filter signal direction</label>
+                <select id="direction-filter" aria-label="Filter signal direction">
+                  <option value="all">All directions</option>
+                  <option value="BUY">Buy only</option>
+                  <option value="SELL">Sell only</option>
+                </select>
+                <button class="export-button" id="export-button" type="button" disabled>
+                  <span aria-hidden="true">↓</span> Export CSV
+                </button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th scope="col">TIME · PKT</th><th scope="col">PAIR</th><th scope="col">DIRECTION</th><th scope="col">TEST ACC.</th><th scope="col">SAMPLES</th><th scope="col">PATTERN</th></tr>
+                </thead>
+                <tbody id="signals-body">
+                  <tr class="empty-row"><td colspan="6"><span class="empty-row-mark">—</span> No scan results yet</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="results-status" id="results-status" aria-live="polite"><span class="status-pulse"></span><span id="status-message">Dashboard ready · configure a scan to begin</span><span id="status-time"></span></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>QUOTEX SIGNAL GENERATOR <span class="footer-separator">/</span> LOCAL DASHBOARD</span>
+      <span>OUT-OF-SAMPLE VALIDATION · NOT FINANCIAL ADVICE</span>
+    </footer>
+  </div>
+</body>
+</html>

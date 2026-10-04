@@ -1,0 +1,5 @@
+.env
+.qtx_expiry
+__pycache__/
+*.py[cod]
+future_signals.csv
